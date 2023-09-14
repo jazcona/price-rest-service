@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 public class PriceController {
     
     @Autowired
-    PriceInputPort priceService;
+    PriceInputPort priceInputPort;
 
     @Operation(summary = "Obtener tarifa producto")
     @ApiResponses(value = {
@@ -36,7 +36,7 @@ public class PriceController {
             @Parameter(description = "id de la cadena del grupo", example="1") @RequestParam Long brandId,
             @Parameter(description = "id de producto", example="35455") @RequestParam Long productId,
             @Parameter(description = "fecha de aplicación. Formato yyyy-MM-dd HH:mm:ss", example = "2020-06-14 10:00:00") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime applicationDate) {
-        return priceService.findPriceByParams(brandId, productId, applicationDate).orElseThrow(PriceNotFoundException::new);
+        return priceInputPort.findPriceByParams(brandId, productId, applicationDate).orElseThrow(PriceNotFoundException::new);
     }
 }
 

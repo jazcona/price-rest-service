@@ -29,14 +29,14 @@ public class PriceControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private PriceInputPort priceService;
+    private PriceInputPort priceInputPort;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final Long brandId = 1L;
     private static final Long productId = 35455L;
 
-    /*@Test
+    @Test
     public void testScenario1() throws Exception {
         String applicationDateStr = "2020-06-14 10:00:00";
         
@@ -51,7 +51,7 @@ public class PriceControllerTests {
             .curr("EUR")
             .build());
 
-        when(priceService.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+        when(priceInputPort.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
             .thenReturn(expectedPrice);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/price")
@@ -61,7 +61,7 @@ public class PriceControllerTests {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(35.50));
-    }*/
+    }
 
     @Test
     public void testScenario2() throws Exception {
@@ -78,7 +78,7 @@ public class PriceControllerTests {
             .curr("EUR")
             .build());
 
-        when(priceService.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+        when(priceInputPort.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
             .thenReturn(expectedPrice);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/price")
@@ -90,7 +90,7 @@ public class PriceControllerTests {
             .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(25.45));
     }    
 
-    /*@Test
+    @Test
     public void testScenario3() throws Exception {
         String applicationDateStr = "2020-06-14 21:00:00";
 
@@ -105,7 +105,7 @@ public class PriceControllerTests {
             .curr("EUR")
             .build());
 
-        when(priceService.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+        when(priceInputPort.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
             .thenReturn(expectedPrice);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/price")
@@ -121,7 +121,7 @@ public class PriceControllerTests {
     public void testScenario4() throws Exception {
         String applicationDateStr = "2020-06-15 10:00:00";
 
-        Price expectedPrice = Price.builder()
+        Optional<Price> expectedPrice = Optional.of(Price.builder()
             .brandId(brandId)
             .startDate(LocalDateTime.parse("2020-06-15 00:00:00",formatter))
             .endDate(LocalDateTime.parse("2020-06-15 11:00:00",formatter))
@@ -130,9 +130,9 @@ public class PriceControllerTests {
             .priority(1L)
             .price(BigDecimal.valueOf(30.50))
             .curr("EUR")
-            .build();
+            .build());
 
-        when(priceService.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+        when(priceInputPort.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
             .thenReturn(expectedPrice);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/price")
@@ -148,7 +148,7 @@ public class PriceControllerTests {
     public void testScenario5() throws Exception {
         String applicationDateStr = "2020-06-16 21:00:00";
 
-        Price expectedPrice = Price.builder()
+        Optional<Price> expectedPrice = Optional.of(Price.builder()
                 .brandId(brandId)
                 .startDate(LocalDateTime.parse("2020-06-15 16:00:00",formatter))
                 .endDate(LocalDateTime.parse("2020-12-31 23:59:59",formatter))
@@ -157,9 +157,9 @@ public class PriceControllerTests {
                 .priority(1L)
                 .price(BigDecimal.valueOf(38.95))
                 .curr("EUR")
-                .build();
+                .build());
 
-            when(priceService.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+            when(priceInputPort.findPriceByParams(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter)))
                 .thenReturn(expectedPrice);
 
             mockMvc.perform(MockMvcRequestBuilders.get("/price")
@@ -169,5 +169,49 @@ public class PriceControllerTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(38.95));
-    }*/
+    }
+
+    @Test
+    public void testScenario6() throws Exception {
+        String applicationDateStr = "2020-06-16 21:00:00";
+
+        Optional<Price> expectedPrice = Optional.empty();
+        when(priceInputPort.findPriceByParams(2L, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+            .thenReturn(expectedPrice);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/price")
+            .param("brandId", brandId.toString())
+            .param("productId", productId.toString())
+            .param("applicationDate", applicationDateStr)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    public void testScenario7() throws Exception {
+        String applicationDateStr = "9999-99-99 99:99:99";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/price")
+            .param("brandId", brandId.toString())
+            .param("productId", productId.toString())
+            .param("applicationDate", applicationDateStr)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    public void testScenario8() throws Exception {
+        String applicationDateStr = "2020-06-16 21:00:00";
+
+        Optional<Price> expectedPrice = Optional.empty();
+        when(priceInputPort.findPriceByParams(2L, productId, LocalDateTime.parse(applicationDateStr,formatter)))
+            .thenReturn(expectedPrice);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/price")
+            .param("brandId", brandId.toString())
+            .param("productId", productId.toString())
+            .param("applicationDate", applicationDateStr)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
 }
