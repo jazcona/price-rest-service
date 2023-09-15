@@ -7,5 +7,5 @@ CREATE TABLE PRICES (
     price_list INT,
     product_id INT,
     priority INT,
-    price DECIMAL(10, 2),
+    price DECIMAL(16, 2),
     curr VARCHAR(3))

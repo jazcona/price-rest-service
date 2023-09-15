@@ -15,12 +15,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(value = "price")
-public class PriceController {
+@Slf4j
+public class PriceAPI {
     
     @Autowired
     PriceInputPort priceInputPort;
@@ -36,6 +38,7 @@ public class PriceController {
             @Parameter(description = "id de la cadena del grupo", example="1") @RequestParam Long brandId,
             @Parameter(description = "id de producto", example="35455") @RequestParam Long productId,
             @Parameter(description = "fecha de aplicación. Formato yyyy-MM-dd HH:mm:ss", example = "2020-06-14 10:00:00") @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime applicationDate) {
+        log.info("getPrice: "+brandId+"|"+productId+"|"+applicationDate);        
         return priceInputPort.findPriceByParams(brandId, productId, applicationDate).orElseThrow(PriceNotFoundException::new);
     }
 }

@@ -1,5 +1,7 @@
 package com.jazcona.pricerestservice;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Assertions;
@@ -19,18 +21,77 @@ public class PriceRepositoryTests {
 
     private static final Long brandId = 1L;
     private static final Long productId = 35455L;
+    
     @Test
-    public void givenBrandIdProductIdApplicationDate_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnExpectedPrice(){
+    public void givenBrandIdProductIdApplicationDate_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnNotNull(){
         
-        // given - setup or precondition
+        // given
         String applicationDateStr = "2020-06-14 21:00:00";
-        Long expectedId = 1L;
-        // when - action or the testing
+
+        // when
         Price priceDB = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter), LocalDateTime.parse(applicationDateStr,formatter)).get();
 
-        // then - very output
+        // then
+        Assertions.assertNotNull(priceDB);
+    }
+
+    @Test
+    public void givenBrandId1ProductIdApplicationDate20200614100000_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnExpectedPrice(){
+        
+        // given
+        String applicationDateStr = "2020-06-14 10:00:00";
+        BigDecimal expectedPrice = new BigDecimal(35.5).setScale(2, RoundingMode.HALF_UP);
+        // when
+        Price priceDB = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter), LocalDateTime.parse(applicationDateStr,formatter)).get();
+
+        // then
         Assertions.assertNotNull(priceDB);
         Assertions.assertNotNull(priceDB.getId());
-        Assertions.assertEquals(priceDB.getId(), expectedId);
+        Assertions.assertEquals(priceDB.getPrice(), expectedPrice);
+    }
+
+    @Test
+    public void givenBrandIdProductIdApplicationDate20200614160000_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnExpectedPrice(){
+        
+        // given
+        String applicationDateStr = "2020-06-14 16:00:00";
+        BigDecimal expectedPrice = new BigDecimal(25.45).setScale(2, RoundingMode.HALF_UP);
+        // when
+        Price priceDB = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter), LocalDateTime.parse(applicationDateStr,formatter)).get();
+
+        // then
+        Assertions.assertNotNull(priceDB);
+        Assertions.assertNotNull(priceDB.getId());
+        Assertions.assertEquals(priceDB.getPrice(), expectedPrice);
+    }
+
+    @Test
+    public void givenBrandIdProductIdApplicationDate20200614210000_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnExpectedPrice(){
+        
+        // given
+        String applicationDateStr = "2020-06-14 21:00:00";
+        BigDecimal expectedPrice = new BigDecimal(35.5).setScale(2, RoundingMode.HALF_UP);
+        // when
+        Price priceDB = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter), LocalDateTime.parse(applicationDateStr,formatter)).get();
+
+        // then
+        Assertions.assertNotNull(priceDB);
+        Assertions.assertNotNull(priceDB.getId());
+        Assertions.assertEquals(priceDB.getPrice(), expectedPrice);
+    }
+
+    @Test
+    public void givenBrandIdProductIdApplicationDate20200615100000_whenfindFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc_thenReturnExpectedPrice(){
+        
+        // given
+        String applicationDateStr = "2020-06-15 10:00:00";
+        BigDecimal expectedPrice = new BigDecimal(30.50).setScale(2, RoundingMode.HALF_UP);
+        // when
+        Price priceDB = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(brandId, productId, LocalDateTime.parse(applicationDateStr,formatter), LocalDateTime.parse(applicationDateStr,formatter)).get();
+
+        // then
+        Assertions.assertNotNull(priceDB);
+        Assertions.assertNotNull(priceDB.getId());
+        Assertions.assertEquals(priceDB.getPrice(), expectedPrice);
     }
 }
