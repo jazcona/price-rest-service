@@ -24,8 +24,13 @@ import java.time.LocalDateTime;
 @Slf4j
 public class PriceAPI {
     
-    @Autowired
+    
     PriceInputPort priceInputPort;
+
+    @Autowired
+    public void setPriceInputPort(PriceInputPort priceInputPort){
+        this.priceInputPort = priceInputPort;
+    }
 
     @Operation(summary = "Obtener tarifa producto")
     @ApiResponses(value = {

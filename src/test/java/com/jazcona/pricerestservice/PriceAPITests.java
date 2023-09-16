@@ -25,8 +25,12 @@ import com.jazcona.pricerestservice.infra.inputport.PriceInputPort;
 @AutoConfigureMockMvc
 public class PriceAPITests {
 
-    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    public void setMockMvc (MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     @MockBean
     private PriceInputPort priceInputPort;

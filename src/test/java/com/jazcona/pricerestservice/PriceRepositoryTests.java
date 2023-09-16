@@ -14,8 +14,13 @@ import com.jazcona.pricerestservice.infra.outputport.PriceRepository;
 
 @DataJpaTest
 public class PriceRepositoryTests {
-    @Autowired
+
     private PriceRepository priceRepository;
+
+    @Autowired
+    public void setPriceRepository(PriceRepository priceRepository){
+        this.priceRepository = priceRepository;
+    }
     
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

@@ -15,8 +15,13 @@ import java.util.Optional;
 @Slf4j
 public class PriceUseCase implements PriceInputPort {
     
-    @Autowired
+    
     PriceRepository priceRepository;
+    
+    @Autowired
+    public void setPriceRepository(PriceRepository priceRepository){
+        this.priceRepository = priceRepository;
+    }
 
     @Override
     public Optional<Price> findPriceByParams(Long brandId, Long productId, LocalDateTime applicationDate) {
